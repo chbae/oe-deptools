@@ -33,7 +33,7 @@ def parse_pn_depends():
                 line = line.rstrip()
                 fields = line.split(' ')
 
-                if len(fields) < 3 or fields[1] != '->' or fields[0][1:-1].split('.do_')[1] != 'prepare_recipe_sysroot':
+                if len(fields) < 3 or fields[1] != '->' or fields[0][1:-1].split('.do_')[1] != 'prepare_recipe_sysroot' or fields[2][1:-1].split('.do_')[1] != 'populate_sysroot':
                         continue
 
                 if len(fields) == 3:
