@@ -11,7 +11,6 @@ pn = {}
 rev_pn = {}
 
 show_parent_deps = False
-show_verbose_messages = False
 depends_file = 'task-depends.dot'
 
 indent_str = '\t'
@@ -44,27 +43,6 @@ def parse_pn_depends():
                                 pn[name] = []
 
                         pn[name].append(depend)
-
-                elif len(fields) == 4:
-                        if fields[0] == fields[2]:
-                                continue
-
-                        name = fields[0][1:-1]
-                        depend = fields[2][1:-1]
-
-                        if depend in pn and name in pn[depend]:
-                                if show_verbose_messages:
-                                        print('\n*** Found loop dependency')
-                                        print('\t', name, '->', depend)
-                                        print('\t', depend, '->', name, '\n')
-
-                                continue
-
-                        if name not in pn:
-                                pn[name] = []
-                                pn[name].append(depend)
-                        elif not depend in pn[name]:
-                                pn[name].append(depend)
 
 
 def build_reverse_dependencies():
@@ -228,9 +206,6 @@ if __name__ == '__main__':
                 if o in ('-h'):
                         usage()
                         sys.exit()
-
-                elif o in ('-v'):
-                        show_verbose_messages = True
 
                 elif o in ('-r'):
                         reverse = True
