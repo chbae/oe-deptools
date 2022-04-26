@@ -10,7 +10,7 @@ rev_pn = {}
 
 show_parent_deps = False
 show_verbose_messages = False
-depends_file = 'pn-depends.dot'
+depends_file = 'task-depends.dot'
 
 indent_str = '\t'
 
@@ -31,12 +31,12 @@ def parse_pn_depends():
 		line = line.rstrip()
 		fields = line.split(' ')
 
-		if len(fields) < 3 or fields[1] != '->':
+                if len(fields) < 3 or fields[1] != '->' or fields[0][1:-1].split('.do_')[1] != 'prepare_recipe_sysroot':
 			continue
 
 		if len(fields) == 3:
-			name = fields[0][1:-1]
-			depend = fields[2][1:-1]
+			name = fields[0][1:-1].split('.do_')[0]
+			depend = fields[2][1:-1].split('.do_')[0]
 
 			if not pn.has_key(name):
 				pn[name] = []
