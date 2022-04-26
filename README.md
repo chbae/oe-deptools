@@ -6,7 +6,7 @@ A few scripts for working with Yocto/OpenEmbedded and Linux.
 
 To install, clone the repo with git:
 
-        git clone git://github.com/scottellis/oe-deptools.git
+        git clone git://github.com/chbae/oe-deptools.git
 
 You'll get two python scripts
 
@@ -35,7 +35,6 @@ Used to show dependencies for Yocto/OE packages.
         -v      Show error messages such as recursive dependencies
         -r      Show reverse dependencies, i.e. packages dependent on package
         -f      Flat output instead of default tree output
-        -p      Use package-depends.dot; pn-depends.dot by default
         -d <depth>      Maximum depth to follow dependencies, default and max is 10
         -s      Show child package dependencies that are already listed
                 as direct parent dependencies.
@@ -54,17 +53,15 @@ the `--graphviz` or `-g` option.
 You can generate a dependency list for a particular package or a whole image
 at once. This doesn't take long even for an image recipe.
 
-        ~/overo/build$ bitbake -g console-image
+        ~/poky/build$ bitbake -g core-image-minimal
 
 
 The following files will be generated in the *build* directory.
 
-* package-depends.dot 
-* pn-buildlist
-* pn-depends.dot
 * task-depends.dot
+* pn-buildlist
 
-The `oey.py` script uses either `pn-depends.dot` or `package-depends.dot`
+The `oey.py` script uses `task-depends.dot`
 for its data.
 
 The script is hard-coded to look for the data file in the current
@@ -74,38 +71,61 @@ working directory so you should run it from the directory where
 
 #####  Example
 
-    scott@octo:~/overo/build$ oey.py openssl
+    chbae@yocto:~/poky/build$ oey.py -d 2 openssl
 
     Package [ openssl ] depends on
-            cryptodev-linux
-                    cryptodev-linux-dev
-            openssl-conf
-            openssl-dev
-            perl-native-runtime
-            pkgconfig-native
-                    autoconf-native
-                            m4-native
-                    automake-native
-                            perl-native-runtime
-                    gnu-config-native
-                            perl-native-runtime
-                    libtool-native
-            virtual/arm-poky-linux-gnueabi-compilerlibs
-            virtual/arm-poky-linux-gnueabi-gcc
-            virtual/libc
+         gcc-cross-x86_64
+                 autoconf-native
+                 automake-native
+                 binutils-cross-x86_64
+                 flex-native
+                 gmp-native
+                 libmpc-native
+                 libtool-native
+                 linux-libc-headers
+                 mpfr-native
+                 texinfo-dummy-native
+                 zlib-native
+         gcc-runtime
+                 autoconf-native
+                 automake-native
+                 libgcc
+                 libtool-native
+                 texinfo-dummy-native
+         glibc
+                 autoconf-native
+                 automake-native
+                 bison-native
+                 gperf-native
+                 libgcc-initial
+                 libtool-native
+                 linux-libc-headers
+                 make-native
+                 texinfo-dummy-native
+         opkg-utils
+         perl-native
+                 gdbm-native
+                 perlcross-native
+                 zlib-native
+         pseudo-native
+                 attr-native
+                 pkgconfig-native
+                 sqlite3-native
 
 
-    scott@octo:~/overo/build$ oey.py -r openssl
+    chbae@yocto:~/poky/build$ oey.py -r openssl
 
     Package [ openssl ] is needed by
-            git
-                    console-image
-            openssh
-                    packagegroup-core-ssh-openssh
-            python
-                    iotop
-                            console-image
-                    opkg-utils
-            wget
-                    console-image
-
+         curl
+                 elfutils
+                         binutils
+                         iproute2
+                 libmicrohttpd
+                         elfutils
+                                 binutils
+                                 iproute2
+         python3
+                 btrfs-tools
+                 libxml2
+                         shared-mime-info
+         socat
