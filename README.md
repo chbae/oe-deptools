@@ -8,13 +8,12 @@ To install, clone the repo with git:
 
         git clone git://github.com/chbae/oe-deptools.git
 
-You'll get two python scripts
+You'll get a python script
 
 * oey.py
-* diffconfig.py
 
 You can copy the scripts to a standard location in your path or just
-run them specifying the full path everytime (./oey.py <args>)
+run them specifying the full path everytime (./oy.py <args>)
 
 ###  oey.py
 
