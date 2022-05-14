@@ -175,6 +175,7 @@ def usage():
         print('Uses the task-depends.dot file for raw data.')
         print('Generate the *.dot data files by running bitbake -g <recipe>.\n')
         print('Options:')
+        print('-i <input file path>\tInput file path')
         print('-h\tShow this help message and exit')
         print('-v\tShow error messages such as recursive dependencies')
         print('-r\tShow reverse dependencies, i.e. packages dependent on package')
@@ -190,7 +191,7 @@ def usage():
 if __name__ == '__main__':
 
         try:
-                opts, args = getopt.getopt(sys.argv[1:], 'hvrfd:s')
+                opts, args = getopt.getopt(sys.argv[1:], 'hi:vrfd:s')
 
         except(getopt.GetoptError, err):
                 print(str(err))
@@ -206,6 +207,9 @@ if __name__ == '__main__':
                 if o in ('-h'):
                         usage()
                         sys.exit()
+
+                elif o in ('-i'):
+                        depends_file = a
 
                 elif o in ('-r'):
                         reverse = True
