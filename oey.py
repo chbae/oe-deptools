@@ -61,7 +61,7 @@ def list_packages():
         print('\n',)
 
 
-def list_deps_recurse(package, parent_deps, depth, max_depth):
+def list_deps_recurse(package, parent_deps, depth, max_depth, not_show_native_deps):
         if depth > max_depth:
                 return;
 
@@ -69,15 +69,16 @@ def list_deps_recurse(package, parent_deps, depth, max_depth):
                 tab_str = indent_str * depth
 
                 for dep in sorted(pn[package]):
-                        if show_parent_deps or dep not in parent_deps:
+                    if show_parent_deps or dep not in parent_deps:
+                        if not not_show_native_deps or (not_show_native_deps and "-native" not in dep):
                                 print(tab_str, dep)
-                                list_deps_recurse(dep, pn[package], depth + 1, max_depth)
+                                list_deps_recurse(dep, pn[package], depth + 1, max_depth, not_show_native_deps)
 
 
-def list_deps(package, max_depth):
+def list_deps(package, max_depth, not_show_native_deps):
         if package in pn:
                 print('\nPackage [', package, '] depends on')
-                list_deps_recurse(package, (), 1, max_depth)
+                list_deps_recurse(package, (), 1, max_depth, not_show_native_deps)
 
         elif package in rev_pn:
                 print('Package [', package, '] has no dependencies')
@@ -114,25 +115,27 @@ def list_reverse_deps(package, max_depth):
         print('\n',)
 
 
-def collect_deps_flat(src, d, package, depth, max_depth):
+def collect_deps_flat(src, d, package, depth, max_depth, not_show_native_deps):
         if depth > max_depth:
                 return;
 
         if package in src:
                 for dep in src[package]:
                         if dep not in d:
+                            if not not_show_native_deps or (not_show_native_deps and "-native" not in dep):
                                 d.append(dep)
-                                collect_deps_flat(src, d, dep, depth + 1, max_depth)
+                                collect_deps_flat(src, d, dep, depth + 1, max_depth, not_show_native_deps)
 
 
-def list_deps_flat(package, max_depth):
+def list_deps_flat(package, max_depth, not_show_native_deps):
         d = []
 
         if package in pn:
                 for dep in pn[package]:
                         if dep not in d:
+                            if not not_show_native_deps or (not_show_native_deps and "-native" not in dep):
                                 d.append(dep)
-                                collect_deps_flat(pn, d, dep, 2, max_depth)
+                                collect_deps_flat(pn, d, dep, 2, max_depth, not_show_native_deps)
 
                 print('\nPackage [', package, '] depends on')
                 for dep in sorted(d):
@@ -154,7 +157,7 @@ def list_reverse_deps_flat(package, max_depth):
                 for dep in rev_pn[package]:
                         if dep not in d:
                                 d.append(dep)
-                                collect_deps_flat(rev_pn, d, dep, 2, max_depth)
+                                collect_deps_flat(rev_pn, d, dep, 2, max_depth, not_show_native_deps)
 
                 print('\nPackage [', package, '] is needed by')
                 for dep in sorted(d):
@@ -182,7 +185,8 @@ def usage():
         print('-f\tFlat output instead of default tree output')
         print('-d <depth>\tMaximum depth to follow dependencies, default and max is 10')
         print('-s\tShow child package dependencies that are already listed')
-        print('\tas direct parent dependencies.\n')
+        print('\tas direct parent dependencies.')
+        print('-n\tRemove host(native) dependencies\n')
         print("Provide the package name to analyze from the generated *.dot file.")
         print('Run the program without a package name to get a list of all')
         print('available package names.\n')
@@ -191,7 +195,7 @@ def usage():
 if __name__ == '__main__':
 
         try:
-                opts, args = getopt.getopt(sys.argv[1:], 'hi:vrfd:s')
+                opts, args = getopt.getopt(sys.argv[1:], 'hi:vrfd:s:n')
 
         except(getopt.GetoptError, err):
                 print(str(err))
@@ -202,6 +206,7 @@ if __name__ == '__main__':
         depth = 10
         reverse = False
         flat = False
+        not_show_native_deps = False
 
         for o, a in opts:
                 if o in ('-h'):
@@ -227,6 +232,8 @@ if __name__ == '__main__':
                                 print('Bad depth argument: ', a)
                                 usage()
                                 sys.exit(1)
+                elif o in ('-n'):
+                        not_show_native_deps = True
 
                 else:
                         assert False, 'unhandled option'
@@ -247,9 +254,9 @@ if __name__ == '__main__':
                                 list_reverse_deps(args[0], depth)
                 else:
                         if flat:
-                                list_deps_flat(args[0], depth)
+                                list_deps_flat(args[0], depth, not_show_native_deps)
                         else:
-                                list_deps(args[0], depth)
+                                list_deps(args[0], depth, not_show_native_deps)
 
         else:
                 list_packages()

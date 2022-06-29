@@ -37,6 +37,7 @@ Used to show dependencies for Yocto/OE packages.
         -d <depth>      Maximum depth to follow dependencies, default and max is 10
         -s      Show child package dependencies that are already listed
                 as direct parent dependencies.
+        -n      Remove host(native) dependencies
 
         Provide a package name from the generated pn-depends.dot file.
         Run the program without a package name to get a list of
