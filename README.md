@@ -35,6 +35,7 @@ Used to show dependencies for Yocto/OE packages.
         -r      Show reverse dependencies, i.e. packages dependent on package
         -f      Flat output instead of default tree output
         -d <depth>      Maximum depth to follow dependencies, default and max is 10
+        -i <input file path>    Input file path
         -s      Show child package dependencies that are already listed
                 as direct parent dependencies.
         -n      Remove host(native) dependencies
