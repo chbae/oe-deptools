@@ -180,6 +180,7 @@ def usage():
     print('Options:')
     print('-h\tShow this help message and exit')
     print('-v\tShow error messages such as recursive dependencies')
+
     print('-r\tShow reverse dependencies, i.e. packages dependent on package')
     print('-f\tFlat output instead of default tree output')
     print('-d <depth>\tMaximum depth to follow dependencies, default and max is 10')
@@ -198,8 +199,8 @@ if __name__ == '__main__':
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'hi:vrfd:s:n')
 
-    except(getopt.GetoptError, err):
-        print(str(err))
+    except getopt.GetoptError:
+        print('No options: Please see the help')
         usage()
         sys.exit(2)
 
