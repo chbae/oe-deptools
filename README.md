@@ -21,12 +21,12 @@ Used to show dependencies for Yocto/OE packages.
  
 #####  Help
 
-        oey.py -h
+        $ ./oey.py -h
 
-        Usage: oey.py [options] [package]
+        Usage: ./oey.py [options] [package]
 
         Displays dependencies for a given package or recipe.
-        Uses either pn-depends.dot or package-depends.dot for its raw data.
+        Uses task-depends.dot for its raw data.
         Generate the *.dot files by running bitbake -g <recipe>.
 
         Options:
@@ -37,8 +37,9 @@ Used to show dependencies for Yocto/OE packages.
         -d <depth>      Maximum depth to follow dependencies, default and max is 10
         -i <input file path>    Input file path
         -s      Show child package dependencies that are already listed
-                as direct parent dependencies.
         -n      Remove host(native) dependencies
+                as direct parent dependencies.
+        
 
         Provide a package name from the generated pn-depends.dot file.
         Run the program without a package name to get a list of
